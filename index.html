@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <style>
+      button {
+        margin-top: 50vh;
+        margin-left: 50vw;
+        background-color: dodgerblue;
+        color: white;
+      }
+      section {
+        margin-left: 60vw;
+        margin-top: 40vh;
+      }
+    </style>
+</head>
+<body>
+
+
+<button onclick="prompt('Are you sure?')"> Confirm</button>
+<script>
+  const template = "<section><div><input type=\"radio\" id=\"Arsen\" name=\"special\" value=\"Arsen\"><label for=\"Arsen\">Arsen</label></div> <div><input type=\"radio\" id=\"Mykola\" name=\"special\" value=\"Mykola\"><label for=\"Mykola\">Mykola</label></div></section>"
+
+  setTimeout(() => {
+    document.body.insertAdjacentHTML("afterbegin", template);
+  }, 2000)
+
+</script>
+</body>
+</html>
