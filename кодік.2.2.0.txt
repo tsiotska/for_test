@@ -1,0 +1,56 @@
+  function getElementByXpath(path) {
+    return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
+  }
+
+  function go() {
+    const button = findGreenButton()
+    button.click()
+    console.log('green button clicked')
+
+    const radioInterval = setInterval(() => {
+      const radio = findRadio("//input[@type='radio']")
+      if (radio) {
+        radio.click()
+        console.log('radio clicked')
+        console.log(radio.checked);
+
+        if (radio.checked) {
+          setTimeout(() => {
+            const confirmBtn = findConfirmationButton("//*[@id='btnConfirm']")
+            console.log('confirm click')
+            confirmBtn.click()
+            clearInterval(radioInterval)
+          })
+        }
+      }
+    }, 10)
+  }
+
+  function findGreenButton() {
+    return document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
+  }
+
+  function findRadio(path) {
+    console.log('search radio')
+    const result = getElementByXpath(path)
+    result.iterateNext()
+    result.iterateNext()
+    const third = result.iterateNext()
+    console.log(third);
+    const fourth = result.iterateNext()
+    console.log('Is next date present?');
+    console.log(fourth);
+
+    return fourth ?? third
+  }
+
+  function findConfirmationButton(path) {
+    const result = getElementByXpath(path)
+    return result.iterateNext()
+  }
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.which === 32) {
+      go()
+    }
+  });
