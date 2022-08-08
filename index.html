@@ -6,29 +6,97 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>HTML 5 Boilerplate</title>
     <style>
-      button {
-        margin-top: 50vh;
-        margin-left: 50vw;
-        background-color: dodgerblue;
-        color: white;
-      }
-      section {
-        margin-left: 60vw;
-        margin-top: 40vh;
-      }
+        body {
+            position: relative;
+        }
+
+        button {
+            position: absolute;
+            top: 65vh;
+            left: 50vw;
+            background-color: dodgerblue;
+            color: white;
+            padding: 10px;
+        }
+
+        section {
+            margin-left: 60vw;
+            margin-top: 40vh;
+        }
     </style>
 </head>
 <body>
 
+<fieldset>
+    <legend>Select a maintenance drone:</legend>
 
-<button onclick="prompt('Are you sure?')"> Confirm</button>
+    <div>
+        <input type="radio" id="huey" name="drone" value="huey">
+        <label for="huey">Huey</label>
+    </div>
+
+    <div>
+        <input type="radio" id="dewey" name="drone" value="dewey">
+        <label for="dewey">Dewey</label>
+    </div>
+
+    <div>
+        <input type="radio" id="louie" name="drone" value="louie">
+        <label for="louie">Louie</label>
+    </div>
+</fieldset>
+
+<button id="btnConfirm" onclick="prompt('Are you sure?')"> Confirm</button>
 <script>
-  const template = "<section><div><input type=\"radio\" id=\"Arsen\" name=\"special\" value=\"Arsen\"><label for=\"Arsen\">Arsen</label></div> <div><input type=\"radio\" id=\"Mykola\" name=\"special\" value=\"Mykola\"><label for=\"Mykola\">Mykola</label></div></section>"
+  /*
+    const template = "<section><div><input type=\"radio\" id=\"Arsen\" name=\"special\" value=\"Arsen\"><label for=\"Arsen\">Arsen</label></div> <div><input type=\"radio\" id=\"Mykola\" name=\"special\" value=\"Mykola\"><label for=\"Mykola\">Mykola</label></div></section>"
 
-  setTimeout(() => {
-    document.body.insertAdjacentHTML("afterbegin", template);
-  }, 2000)
+    setTimeout(() => {
+      document.body.insertAdjacentHTML("afterbegin", template);
+    }, 2000)
+  */
 
+  function getElementByXpath(path) {
+    return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
+  }
+
+  function findRadio(path) {
+    const intervalId = setInterval(() => {
+      console.log('search radio')
+      const result = getElementByXpath(path)
+      const first = result.iterateNext()
+      console.log(first);
+      const second = result.iterateNext()
+      console.log(second);
+      const third = result.iterateNext()
+      console.log(third);
+      const fourth = result.iterateNext()
+      console.log(fourth);
+
+      const actualDate = fourth ?? third
+
+      if (actualDate) {
+        console.log('dispatch')
+        actualDate.click()
+        clearInterval(intervalId);
+      }
+    }, 50)
+  }
+
+  function findButton(path) {
+    const result = getElementByXpath(path)
+    const first = result.iterateNext()
+    first.click()
+  }
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.which === 32) {
+      findRadio("//input[@type='radio']")
+    }
+    if (ev.which === 76) {
+      findButton("//*[@id='btnConfirm']")
+    }
+  });
 </script>
 </body>
 </html>
