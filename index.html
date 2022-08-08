@@ -476,6 +476,15 @@
     return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
   }
 
+  function getTimeToCheck() {
+    const date = new Date();
+    const minutesLeft = 60 - date.getMinutes()
+    const secondsLeft = 60 - date.getSeconds()
+    const millisecondsLeft = 60 - date.getMilliseconds()
+    const toMilliseconds = minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft
+    return toMilliseconds
+  }
+
   function go() {
     const button = findGreenButton();
     console.log('button');
@@ -525,11 +534,14 @@
     return result.iterateNext()
   }
 
-  document.addEventListener('keydown', function (ev) {
-    if (ev.which === 32) {
-      go()
-    }
-  });
+  const timeLeft = getTimeToCheck()
+  setTimeout(go, timeLeft)
+
+  /*  document.addEventListener('keydown', function (ev) {
+      if (ev.which === 32) {
+        go()
+      }
+    });*/
 
   // fc-widget-content
   //  cursor: pointer;
