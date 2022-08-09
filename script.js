@@ -11,6 +11,23 @@ function getTimeToCheck() {
   return minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft + delay
 }
 
+function findGreenBtn() {
+  return new Promise((resolve, reject) => {
+    const mutationNode = document.querySelector("div[class='fc-content']");
+
+    const observer = new MutationObserver((mutations, observer) => {
+      const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
+
+      if (dayButton) {
+        resolve(dayButton);
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(mutationNode, {attributes: true, childList: true, subtree: true});
+  })
+}
+
 function findRadio(path) {
   return new Promise((resolve, reject) => {
     const mutationNode = document.querySelector("div[id='TimeBandsDiv']");
@@ -47,14 +64,28 @@ function findConfirmationButton(path) {
 }
 
 async function start() {
+  // --- step one ---
+
   const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
   prevBtn.click()
 
-  // const gereenBtn = await findGreenBtn();
-  // gereenBtn.click();
+  // --- step two ---
+
+  const greenBtn = await findGreenBtn();
+  let slot = $(greenBtn);
+  let down = new $.Event("mousedown");
+  down.which = 1;
+  down.pageX = slot.offset().left;
+  down.pageY = slot.offset().top;
+  slot.trigger(down);
+
+  // --- step three ---
 
   const radioBtn = await findRadio("//input[@type='radio']");
   radioBtn.click();
+
+  // --- step four ---
+
   const confirmationBtn = await findConfirmationButton("//*[@id='btnConfirm']");
   if (radioBtn.checked) {
     setTimeout(() => confirmationBtn.click(), 0);
@@ -65,19 +96,4 @@ const timeLeft = getTimeToCheck()
 setTimeout(start, timeLeft)
 
 
-/*  function findGreenBtn() {
-    return new Promise((resolve, reject) => {
-        const mutationNode = document.querySelector("div[class='fc-content']");
 
-        const observer = new MutationObserver((mutations, observer) => {
-            const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
-
-            if(dayButton) {
-                resolve(dayButton);
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(mutationNode, { attributes: true, childList: true, subtree: true });
-    })
-  }*/

@@ -47,6 +47,7 @@ function findConfirmationButton(path) {
 }
 
 async function start() {
+  console.log('start check');
   const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
   prevBtn.click()
   const radioBtn = await findRadio("//input[@type='radio']");
