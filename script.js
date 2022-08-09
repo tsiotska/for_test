@@ -2,9 +2,11 @@ function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
 }
 
+// It starts in desired minute each hour
 function getTimeToCheck() {
   const date = new Date();
-  const minutesLeft = 60 - date.getMinutes() - 1
+  const desiredMinuteToStart = 60
+  const minutesLeft = desiredMinuteToStart - date.getMinutes() - 1
   const secondsLeft = 60 - date.getSeconds() - 1
   const millisecondsLeft = 1000 - date.getMilliseconds()
   const delay = 330
