@@ -1,56 +1,68 @@
 function getElementByXpath(path) {
-    return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
-  }
+  return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
+}
 
-  function findRadio(path) {
-    return new Promise((resolve, reject) => {
-        const mutationNode = document.querySelector("div[id='TimeBandsDiv']");
+function getTimeToCheck() {
+  const date = new Date();
+  const minutesLeft = 60 - date.getMinutes()
+  const secondsLeft = 60 - date.getSeconds()
+  const millisecondsLeft = 60 - date.getMilliseconds()
+  const toMilliseconds = minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft
+  return toMilliseconds
+}
 
-        const observer = new MutationObserver((mutations, observer) => {
-            const result = getElementByXpath(path)
-            result.iterateNext()
-            result.iterateNext()
-            const dateRadio1 = result.iterateNext()
-            const dateRadio2 = result.iterateNext()
-            const actualDate = dateRadio1 ?? dateRadio2
+function findRadio(path) {
+  return new Promise((resolve, reject) => {
+    const mutationNode = document.querySelector("div[id='TimeBandsDiv']");
 
-            if (actualDate) {
-                resolve(actualDate);
-                observer.disconnect();
-            }
-        });
+    const observer = new MutationObserver((mutations, observer) => {
+      const result = getElementByXpath(path)
+      result.iterateNext()
+      result.iterateNext()
+      const dateRadio1 = result.iterateNext()
+      const dateRadio2 = result.iterateNext()
+      const actualDate = dateRadio1 ?? dateRadio2
 
-        observer.observe(mutationNode, { attributes: true, childList: true, subtree: true });
-    })
-  }
+      if (actualDate) {
+        resolve(actualDate);
+        observer.disconnect();
+      }
+    });
 
-  function findConfirmationButton(path) {
-    return new Promise((resolve, reject) => {
-        const result = getElementByXpath(path)
-        const confButton = result.iterateNext();
+    observer.observe(mutationNode, {attributes: true, childList: true, subtree: true});
+  })
+}
 
-        if(confButton) {
-            resolve(confButton)
-        } else {
-            reject(new Error("Can't find confirmation button"))
-        }
-    })
-  }
+function findConfirmationButton(path) {
+  return new Promise((resolve, reject) => {
+    const result = getElementByXpath(path)
+    const confButton = result.iterateNext();
 
-  async function start() {
-    // const gereenBtn = await findGreenBtn();
-    // gereenBtn.click();
-
-    const radioBtn = await findRadio("//input[@type='radio']");
-    radioBtn.click();
-    const confirmationBtn = await findConfirmationButton("//*[@id='btnConfirm']");
-    if (radioBtn.checked) {
-        setTimeout(() => confirmationBtn.click(), 0);
+    if (confButton) {
+      resolve(confButton)
+    } else {
+      reject(new Error("Can't find confirmation button"))
     }
+  })
+}
+
+async function start() {
+  /*const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
+prevBtn.click()*/
+
+  // const gereenBtn = await findGreenBtn();
+  // gereenBtn.click();
+
+  const radioBtn = await findRadio("//input[@type='radio']");
+  radioBtn.click();
+  const confirmationBtn = await findConfirmationButton("//*[@id='btnConfirm']");
+  if (radioBtn.checked) {
+    setTimeout(() => confirmationBtn.click(), 0);
   }
+}
 
-  start();
-
+const timeLeft = getTimeToCheck()
+setTimeout(start, timeLeft)
 
 
 /*  function findGreenBtn() {
