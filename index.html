@@ -485,30 +485,25 @@
     return toMilliseconds
   }
 
-  function go() {
+  function start() {
+    const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
+    prevBtn.click()
+
     const button = findGreenButton();
-    console.log('button');
-    console.log(button);
     button.click();
-    console.log('green button clicked');
 
     const radioInterval = setInterval(() => {
       const radio = findRadio("//input[@type='radio']")
+
       if (radio) {
         radio.click()
-        console.log('radio clicked')
-        console.log(radio.checked);
 
-        if (radio.checked) {
-          setTimeout(() => {
-            const confirmBtn = findConfirmationButton("//*[@id='btnConfirm']")
-            console.log('confirm click')
-            confirmBtn.click()
-            clearInterval(radioInterval)
-          })
-        }
+        const confirmBtn = findConfirmationButton("//*[@id='btnConfirm']")
+        confirmBtn.click()
+
+        clearInterval(radioInterval)
       }
-    }, 30)
+    }, 25)
   }
 
   function findGreenButton() {
@@ -535,11 +530,11 @@
   }
 
   const timeLeft = getTimeToCheck()
-  setTimeout(go, timeLeft)
+  setTimeout(start, timeLeft)
 
   /*  document.addEventListener('keydown', function (ev) {
       if (ev.which === 32) {
-        go()
+        start()
       }
     });*/
 
