@@ -48,10 +48,6 @@ function findConfirmationButton(path) {
 async function start() {
   const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
   prevBtn.click()
-
-  // const gereenBtn = await findGreenBtn();
-  // gereenBtn.click();
-
   const radioBtn = await findRadio("//input[@type='radio']");
   radioBtn.click();
   const confirmationBtn = await findConfirmationButton("//*[@id='btnConfirm']");
@@ -62,21 +58,3 @@ async function start() {
 
 const timeLeft = getTimeToCheck()
 setTimeout(start, timeLeft)
-
-
-/*  function findGreenBtn() {
-    return new Promise((resolve, reject) => {
-        const mutationNode = document.querySelector("div[class='fc-content']");
-
-        const observer = new MutationObserver((mutations, observer) => {
-            const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
-
-            if(dayButton) {
-                resolve(dayButton);
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(mutationNode, { attributes: true, childList: true, subtree: true });
-    })
-  }*/
