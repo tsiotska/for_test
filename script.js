@@ -7,7 +7,7 @@ function getTimeToCheck() {
   const minutesLeft = 60 - date.getMinutes() - 1
   const secondsLeft = 60 - date.getSeconds() - 1
   const millisecondsLeft = 1000 - date.getMilliseconds()
-  const delay = 300
+  const delay = 330
   return minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft + delay
 }
 
@@ -38,7 +38,7 @@ function findRadio(path) {
       result.iterateNext()
       const dateRadio1 = result.iterateNext()
       const dateRadio2 = result.iterateNext()
-      const actualDate = dateRadio1 ?? dateRadio2
+      const actualDate = dateRadio2 ?? dateRadio1
 
       if (actualDate) {
         resolve(actualDate);
