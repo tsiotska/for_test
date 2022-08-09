@@ -7,7 +7,8 @@ function getTimeToCheck() {
   const minutesLeft = 60 - date.getMinutes() - 1
   const secondsLeft = 60 - date.getSeconds() - 1
   const millisecondsLeft = 1000 - date.getMilliseconds()
-  return minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft
+  const delay = 300
+  return minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft + delay
 }
 
 function findRadio(path) {
