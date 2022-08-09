@@ -10,10 +10,6 @@
             width: 360px !important;
         }
 
-        td:active {
-            border: 5px solid darkred;
-        }
-
         body {
             position: relative;
         }
@@ -40,10 +36,9 @@
         <div class="fc fc-ltr">
             <table class="fc-header" style="width:100%">
                 <tr>
-                    <td class="fc-header-left">
-                        <span class="fc-button fc-button-prev fc-state-default fc-corner-left fc-corner-right"
-                              unselectable="on" style="display: none;"><span class="fc-text-arrow">‹</span>
-                        </span></td>
+                    <td class="fc-header-left"><span
+                            class="fc-button fc-button-prev fc-state-default fc-corner-left fc-corner-right"
+                            unselectable="on" style="display: none;"><span class="fc-text-arrow">‹</span></span></td>
                     <td class="fc-header-center"><span class="fc-header-title"><h2>August 2022</h2></span></td>
                     <td class="fc-header-right"><span
                             class="fc-button fc-button-next fc-state-default fc-corner-left fc-corner-right"
@@ -295,9 +290,10 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="fc-day fc-sat fc-widget-content fc-future fc-last"
+                            <td id="green-date-button" 
+                            class="fc-day fc-sat fc-widget-content fc-future fc-last"
                                 data-date="2022-08-27"
-                                style="background-color: rgb(255, 150, 202); cursor: pointer;"
+                                style="background-color: rgb(188, 237, 145); cursor: pointer;"
                             >
                                 <div>
                                     <div class="fc-day-number">27</div>
@@ -445,100 +441,43 @@
 
 </div>
 
-<fieldset>
-    <legend>Select a maintenance drone:</legend>
-
-    <div>
-        <input type="radio" id="huey" name="drone" value="huey">
-        <label for="huey">Huey</label>
-    </div>
-
-    <div>
-        <input type="radio" id="dewey" name="drone" value="dewey">
-        <label for="dewey">Dewey</label>
-    </div>
-
-    <div>
-        <input type="radio" id="louie" name="drone" value="louie">
-        <label for="louie">Louie</label>
-    </div>
-</fieldset>
+<div id="TimeBandsDiv">
+    
+</div>
 
 <button id="btnConfirm" onclick="confirm('Are you sure?')"> Confirm</button>
-
-<div id="c" onclick="alert('hello')">Click me!</div>
-<div onclick="document.getElementById('c').click()">Fake click the previous link!</div>
-
-
 <script>
+    const greenBtn = document.getElementById("green-date-button");
+    const timeBandsDiv = document.getElementById("TimeBandsDiv");
 
-  function getElementByXpath(path) {
-    return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
-  }
+    const renderFieldSet = () => {
+        timeBandsDiv.innerHTML = `
+            <fieldset id="date-fieldset">
+                <legend>Select a maintenance drone:</legend>
 
-  function go() {
-    const button = findGreenButton();
-    console.log('button');
-    console.log(button);
-    button.click();
-    console.log('green button clicked');
+                <div>
+                    <input type="radio" id="huey" name="drone" value="huey">
+                    <label for="huey">Huey</label>
+                </div>
 
-    const radioInterval = setInterval(() => {
-      const radio = findRadio("//input[@type='radio']")
-      if (radio) {
-        radio.click()
-        console.log('radio clicked')
-        console.log(radio.checked);
+                <div>
+                    <input type="radio" id="dewey" name="drone" value="dewey">
+                    <label for="dewey">Dewey</label>
+                </div>
 
-        if (radio.checked) {
-          setTimeout(() => {
-            const confirmBtn = findConfirmationButton("//*[@id='btnConfirm']")
-            console.log('confirm click')
-            confirmBtn.click()
-            clearInterval(radioInterval)
-          })
-        }
-      }
-    }, 30)
-  }
-
-  function findGreenButton() {
-    return document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
-  }
-
-  function findRadio(path) {
-    console.log('search radio')
-    const result = getElementByXpath(path)
-    result.iterateNext()
-    result.iterateNext()
-    const third = result.iterateNext()
-    console.log(third);
-    const fourth = result.iterateNext()
-    console.log('Is next date present?');
-    console.log(fourth || "No");
-
-    return fourth ?? third
-  }
-
-  function findConfirmationButton(path) {
-    const result = getElementByXpath(path)
-    return result.iterateNext()
-  }
-
-  document.addEventListener('keydown', function (ev) {
-    if (ev.which === 32) {
-      go()
+                <div>
+                    <input type="radio" id="louie" name="drone" value="louie">
+                    <label for="louie">Louie</label>
+                </div>
+            </fieldset>
+        `;
     }
-  });
 
-  // fc-widget-content
-  //  cursor: pointer;
-  /*function pressEnter() {
-    const keyEvent = new KeyboardEvent("keydown", {key: "Enter"});
-    document.body.dispatchEvent(keyEvent);
-    console.log('pressed');
-  }*/
+    greenBtn.addEventListener("click", () => {
+        renderFieldSet();
+    });
 
 </script>
+<script src="script.js"></script>
 </body>
 </html>
