@@ -47,8 +47,8 @@ function findConfirmationButton(path) {
 }
 
 async function start() {
-  /*const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
-prevBtn.click()*/
+  const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
+  prevBtn.click()
 
   // const gereenBtn = await findGreenBtn();
   // gereenBtn.click();
