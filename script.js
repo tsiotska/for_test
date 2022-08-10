@@ -2,73 +2,36 @@ function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
 }
 
-// It starts in desired minute each hour
-function getTimeToCheck() {
-  const date = new Date()
-  const desiredMinuteToStart = 9
-  const minutesLeft = desiredMinuteToStart - date.getMinutes() - 1
-  const secondsLeft = 60 - date.getSeconds() - 1
-  const millisecondsLeft = 1000 - date.getMilliseconds()
-  const delay = 1000
-  return minutesLeft * 60000 + secondsLeft * 1000 + millisecondsLeft + delay
-}
-
-// const dayButton = document.querySelector("td[style='color: rgb(204, 204, 204); background-color: rgb(255, 106, 106);']");
-
-const dayButtonSelector = "td[style='background-color: rgb(255, 106, 106); cursor: pointer;']"
-
 function findGreenBtn() {
-      const mutationNode = document.querySelector("div[class='fc-content']");
-
-      const observer = new MutationObserver((mutations, observer) => {
-        const greenBtn = document.querySelector(dayButtonSelector);
-
-        console.log('observe');
-        console.log(greenBtn);
-
-        if (greenBtn) {
-          console.log("I GOT BUTTON");
-          console.log(greenBtn);
-
-          triggerGreenCell(greenBtn)
-          observer.disconnect();
-        }
-      });
-      observer.observe(mutationNode, {attributes: true, childList: true, subtree: true});
-}
-
-const radioXPath = "//input[@type='radio']"
-
-function findRadio() {
   return new Promise((resolve, reject) => {
-    const mutationNode = document.querySelector("div[id='TimeBandsDiv']");
+    const mutationNode = document.querySelector("div[class='fc-content']");
 
     const observer = new MutationObserver((mutations, observer) => {
-      const result = getElementByXpath(radioXPath)
-      result.iterateNext()
-      result.iterateNext()
-      const dateRadio1 = result.iterateNext()
-      const dateRadio2 = result.iterateNext()
-      const actualDate = dateRadio2 ?? dateRadio1
+      const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
 
-      if (actualDate) {
-        actualDate.click()
+      if(dayButton) {
+        resolve(dayButton);
         observer.disconnect();
-        resolve(actualDate);
       }
     });
 
-    observer.observe(mutationNode, {attributes: true, childList: true, subtree: true});
+    observer.observe(mutationNode, { attributes: true, childList: true, subtree: true });
   })
 }
 
-function triggerGreenCell(greenBtn) {
-  let slot = $(greenBtn);
-  let down = new $.Event("mousedown");
-  down.which = 1;
-  down.pageX = slot.offset().left;
-  down.pageY = slot.offset().top;
-  slot.trigger(down);
+function findRadio(path) {
+  return new Promise((resolve, reject) => {
+    const result = getElementByXpath(path)
+    result.iterateNext()
+    result.iterateNext()
+    const dateRadio1 = result.iterateNext()
+    const dateRadio2 = result.iterateNext()
+    const actualDate = dateRadio2 ?? dateRadio1
+
+    if (actualDate) {
+      resolve(actualDate);
+    }
+  })
 }
 
 function findConfirmationButton(path) {
@@ -76,7 +39,7 @@ function findConfirmationButton(path) {
     const result = getElementByXpath(path)
     const confButton = result.iterateNext();
 
-    if (confButton) {
+    if(confButton) {
       resolve(confButton)
     } else {
       reject(new Error("Can't find confirmation button"))
@@ -84,18 +47,25 @@ function findConfirmationButton(path) {
   })
 }
 
-async function toPrevMonth() {
-  console.log('TO PREV MONTH CLICK')
-  const prevBtn = document.getElementsByClassName("fc-button-prev")[0]
-  prevBtn.click()
+async function start() {
+  const gereenBtn = await findGreenBtn();
+  var day = $(gereenBtn);
+  var down = new $.Event("mousedown");
+  var up = new $.Event("mouseup");
+  down.which = up.which = 1;
+  down.pageX = up.pageX = day.offset().left;
+  down.pageY = up.pageY = day.offset().top;
+  day.trigger(down);
+  day.trigger(up);
+
+  const radioBtn = await findRadio("//input[@type='radio']");
+  radioBtn.click();
+
+  const confirmationBtn = await findConfirmationButton("//*[@id='btnConfirm']");
+
+  if (radioBtn.checked) {
+    setTimeout(() => confirmationBtn.click(), 0);
+  }
 }
 
-const timeLeft = getTimeToCheck()
-setTimeout(toPrevMonth, timeLeft)
-findGreenBtn();
-const radioBtn = await findRadio();
-
-const confirmationBtn = await findConfirmationButton("//*[@id='btnConfirm']");
-if (radioBtn.checked) {
-  setTimeout(() => confirmationBtn.click(), 0);
-}
+start();
