@@ -9,13 +9,13 @@ function findGreenBtn() {
     const observer = new MutationObserver((mutations, observer) => {
       const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
 
-      if(dayButton) {
-        resolve(dayButton);
+      if (dayButton) {
         observer.disconnect();
+        resolve(dayButton);
       }
     });
 
-    observer.observe(mutationNode, { attributes: true, childList: true, subtree: true });
+    observer.observe(mutationNode, {attributes: true, childList: true, subtree: true});
   })
 }
 
@@ -39,7 +39,7 @@ function findConfirmationButton(path) {
     const result = getElementByXpath(path)
     const confButton = result.iterateNext();
 
-    if(confButton) {
+    if (confButton) {
       resolve(confButton)
     } else {
       reject(new Error("Can't find confirmation button"))
@@ -49,14 +49,13 @@ function findConfirmationButton(path) {
 
 async function start() {
   const gereenBtn = await findGreenBtn();
-  var day = $(gereenBtn);
-  var down = new $.Event("mousedown");
-  var up = new $.Event("mouseup");
-  down.which = up.which = 1;
-  down.pageX = up.pageX = day.offset().left;
-  down.pageY = up.pageY = day.offset().top;
+  const day = $(gereenBtn);
+  const down = new $.Event("mousedown");
+
+  down.which  = 1;
+  down.pageX  = day.offset().left;
+  down.pageY  = day.offset().top;
   day.trigger(down);
-  day.trigger(up);
 
   const radioBtn = await findRadio("//input[@type='radio']");
   radioBtn.click();
@@ -68,4 +67,26 @@ async function start() {
   }
 }
 
-start();
+const realConfirm = window.confirm;
+window.confirm = function () {
+  console.log('confirm function');
+  window.confirm = realConfirm;
+  return true;
+};
+
+const realPrompt= window.prompt;
+window.prompt = function () {
+  console.log('prompt function');
+  window.prompt = realPrompt;
+  return true;
+};
+
+document.addEventListener('keydown', function (ev) {
+  if (ev.which === 32) {
+    start();
+  }
+});
+
+start()
+
+

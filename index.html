@@ -28,7 +28,8 @@
             margin-top: 40vh;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -292,7 +293,7 @@
                                 </div>
                             </td>
                             <td id="green-date-button"
-                            class="fc-day fc-sat fc-widget-content fc-future fc-last"
+                                class="fc-day fc-sat fc-widget-content fc-future fc-last"
                                 data-date="2022-08-27"
                                 style="background-color: rgb(188, 237, 145); cursor: pointer;"
                             >
@@ -444,13 +445,13 @@
 
 <div id="TimeBandsDiv"></div>
 
-<button id="btnConfirm" onclick="confirm('Are you sure?')"> Confirm</button>
+<button id="btnConfirm" onclick="clickConfirm()"> Confirm</button>
 <script>
-    const greenBtn = document.getElementById("green-date-button");
-    const timeBandsDiv = document.getElementById("TimeBandsDiv");
+  const greenBtn = document.getElementById("green-date-button");
+  const timeBandsDiv = document.getElementById("TimeBandsDiv");
 
-    const renderFieldSet = () => {
-        timeBandsDiv.innerHTML = `
+  const renderFieldSet = () => {
+    timeBandsDiv.innerHTML = `
             <fieldset id="date-fieldset">
                 <legend>Select a maintenance drone:</legend>
                 <div>
@@ -467,12 +468,20 @@
                 </div>
             </fieldset>
         `;
+  }
+
+  greenBtn.addEventListener("click", () => {
+    renderFieldSet();
+  });
+
+  function clickConfirm() {
+    console.log('onConfirmClick')
+    if (confirm('Are you sure?')) {
+      alert("ok")
+    } else {
+      alert("False")
     }
-
-    greenBtn.addEventListener("click", () => {
-        renderFieldSet();
-    });
-
+  }
 </script>
 <script src="script.js"></script>
 </body>
