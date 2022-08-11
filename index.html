@@ -47,8 +47,23 @@
                             unselectable="on"><span class="fc-text-arrow">›</span></span></td>
                 </tr>
             </table>
-            <div class="fc-content" style="position: relative;">
-                <div class="fc-view fc-view-month fc-grid" style="position:relative" unselectable="on">
+            <div class="fc-content" id="fc-content" style="position: relative;">
+
+            </div>
+        </div>
+    </td>
+</div>
+
+<div id="TimeBandsDiv"></div>
+
+<button id="btnConfirm" onclick="clickConfirm()"> Confirm</button>
+<script>
+  renderCalendar()
+
+  function renderCalendar() {
+    const calendarDiv = document.getElementById("fc-content");
+    setTimeout(() => {
+      calendarDiv.innerHTML = `<div class="fc-view fc-view-month fc-grid" style="position:relative" unselectable="on">
                     <div class="fc-event-container" style="position:absolute;z-index:8;top:0;left:0"></div>
                     <table class="fc-border-separate" style="width:100%" cellspacing="0">
                         <thead>
@@ -296,6 +311,7 @@
                                 class="fc-day fc-sat fc-widget-content fc-future fc-last"
                                 data-date="2022-08-27"
                                 style="background-color: rgb(188, 237, 145); cursor: pointer;"
+                                onmousedown="onMouseDownClick()"
                             >
                                 <div>
                                     <div class="fc-day-number">27</div>
@@ -436,21 +452,12 @@
                     </table>
                     <div class="fc-cell-overlay"
                          style="position: absolute; z-index: 3; top: 141.031px; left: 306px; width: 51.0469px; height: 40px; display: none;"></div>
-                </div>
-            </div>
-        </div>
-    </td>
-
-</div>
-
-<div id="TimeBandsDiv"></div>
-
-<button id="btnConfirm" onclick="clickConfirm()"> Confirm</button>
-<script>
-  const greenBtn = document.getElementById("green-date-button");
-  const timeBandsDiv = document.getElementById("TimeBandsDiv");
+                </div>`
+    }, 1000)
+  }
 
   const renderFieldSet = () => {
+    const timeBandsDiv = document.getElementById("TimeBandsDiv");
     timeBandsDiv.innerHTML = `
             <fieldset id="date-fieldset">
                 <legend>Select a maintenance drone:</legend>
@@ -470,12 +477,13 @@
         `;
   }
 
-  greenBtn.addEventListener("click", () => {
-    renderFieldSet();
-  });
+  function onMouseDownClick() {
+    console.log('renderFieldSet');
+    renderFieldSet()
+  }
 
   function clickConfirm() {
-    console.log('onConfirmClick')
+    console.log('on alert click')
     if (confirm('Are you sure?')) {
       alert("ok")
     } else {

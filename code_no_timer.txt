@@ -67,26 +67,10 @@ async function start() {
   }
 }
 
-const realConfirm = window.confirm;
-window.confirm = function () {
-  console.log('confirm function');
-  window.confirm = realConfirm;
-  return true;
-};
-
-const realPrompt= window.prompt;
-window.prompt = function () {
-  console.log('prompt function');
-  window.prompt = realPrompt;
-  return true;
-};
+start()
 
 document.addEventListener('keydown', function (ev) {
   if (ev.which === 32) {
     start();
   }
 });
-
-start()
-
-
