@@ -58,6 +58,7 @@ function findConfirmationButton(path) {
 async function start() {
   console.log('start');
   const realConfirm = window.confirm;
+
   window.confirm = function () {
     console.log('confirm function worked');
     window.confirm = realConfirm;
@@ -71,7 +72,7 @@ async function start() {
     window.prompt = realPrompt;
     return true;
   };
-  console.log('added prompt');
+  console.log('added prompt skip');
 
   const greenBtn = await findGreenBtn();
   const day = $(greenBtn);
