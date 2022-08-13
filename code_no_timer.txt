@@ -2,11 +2,13 @@ function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.ANY_TYPE, null);
 }
 
+const greenBtnSelector = "td[style='background-color: rgb(188, 237, 145); cursor: pointer;']"
+
 function findGreenBtn() {
   return new Promise((resolve) => {
     const mutationNode = document.querySelector("div[class='fc-content']");
 
-    const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
+    let dayButton = document.querySelector(greenBtnSelector);
 
     if (dayButton) {
       console.log('FOUND GREEN (NO OBSERVER)');
@@ -14,7 +16,7 @@ function findGreenBtn() {
     }
 
     const observer = new MutationObserver((mutations, observer) => {
-      const dayButton = document.querySelector("td[style='background-color: rgb(188, 237, 145); cursor: pointer;']");
+      dayButton = document.querySelector(greenBtnSelector);
 
       if (dayButton) {
         console.log('FOUND GREEN (OBSERVER)');
@@ -58,20 +60,13 @@ function findConfirmationButton(path) {
 async function start() {
   console.log('start');
   const realConfirm = window.confirm;
+
   window.confirm = function () {
     console.log('confirm function worked');
     window.confirm = realConfirm;
     return true;
   };
   console.log('added confirm skip');
-
-  const realPrompt = window.prompt;
-  window.prompt = function () {
-    console.log('prompt function worked');
-    window.prompt = realPrompt;
-    return true;
-  };
-  console.log('added prompt');
 
   const greenBtn = await findGreenBtn();
   const day = $(greenBtn);
