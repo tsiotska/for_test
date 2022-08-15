@@ -3,6 +3,7 @@ const delayToStart = 650
 
 const greenBtnSelector = "td[style='background-color: rgb(188, 237, 145); cursor: pointer;']"
 const confirmationButtonXPath = "//*[@id='btnConfirm']"
+const radioXPath = "//input[@type='radio']"
 
 // It starts in desired minute each hour
 function getTimeToCheck() {
@@ -48,13 +49,14 @@ function findGreenBtn() {
 
 function findAndClickRadio() {
   return new Promise((resolve) => {
-    const result = getElementByXpath(path)
+    const result = getElementByXpath(radioXPath)
     result.iterateNext()
     result.iterateNext()
     const dateRadio1 = result.iterateNext()
     const dateRadio2 = result.iterateNext()
     const actualDate = dateRadio2 ?? dateRadio1
-
+    console.log('radio button');
+    console.log(actualDate);
     if (actualDate) {
       resolve(actualDate);
     }
@@ -67,6 +69,7 @@ function findConfirmationButton() {
     const confButton = result.iterateNext();
 
     if (confButton) {
+      confButton.click()
       resolve(confButton)
     } else {
       reject(new Error("Can't find confirmation button"))
@@ -88,15 +91,18 @@ async function toPrevMonth() {
 }
 
 function greenBtnTrigger(greenBtn) {
-  const day = $(greenBtn);
-  console.log(day);
-  const down = new $.Event("mousedown");
+  return new Promise((resolve) => {
+    const day = $(greenBtn);
+    console.log(day);
+    const down = new $.Event("mousedown");
 
-  down.which = 1;
-  down.pageX = day.offset().left;
-  down.pageY = day.offset().top;
-  day.trigger(down);
-  console.log('green button click');
+    down.which = 1;
+    down.pageX = day.offset().left;
+    down.pageY = day.offset().top;
+    day.trigger(down);
+    console.log('green button click');
+    resolve();
+  })
 }
 
 async function start() {
@@ -115,16 +121,14 @@ async function start() {
   }
 
   const greenBtn = await findGreenBtn();
-  greenBtnTrigger(greenBtn)
+  await greenBtnTrigger(greenBtn)
 
-  const radioBtn = await findAndClickRadio();
+  await findAndClickRadio();
   console.log('radio button click');
 
-  const confirmationBtn = await findConfirmationButton();
+  await findConfirmationButton();
   console.log('confirmation button click');
-  if (radioBtn.checked) {
-    setTimeout(() => confirmationBtn.click(), 0);
-  }
+
 
   const time = new Date()
 
